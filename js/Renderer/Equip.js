@@ -1,0 +1,3 @@
+class Equip extends Sprite {
+
+}
