@@ -43,7 +43,7 @@ class ArrayBufferRead {
         let byte7 = this.buffer[this.offset + 6]
         let byte8 = this.buffer[this.offset + 7]
         this.offset += 8
-        return (byte7 << 56) + (byte7 << 48) + (byte6 << 40) + (byte5 << 32) + (byte4 << 24) + (byte3 << 16) + (byte2 << 8) + byte1
+        return (byte8 << 56) + (byte7 << 48) + (byte6 << 40) + (byte5 << 32) + (byte4 << 24) + (byte3 << 16) + (byte2 << 8) + byte1
     }
 
     readBytes(size) {
