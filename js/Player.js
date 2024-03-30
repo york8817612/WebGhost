@@ -3,6 +3,7 @@ class Player {
         this._gender = 0
         this._action = ''
         this._sprite = {}
+        this._eye = {}
         this._container = {}
     }
 
@@ -45,27 +46,48 @@ class Player {
         let path = (this._gender == 0 ? '/assests/data/OBJ/boy' : '/assests/data/OBJ/girl')
         let spr = new SprReader(path, 0)
         let mot = new MotReader(path, 0)
-        let sprFile = await spr.SprFileLoader()
         let motFile = await mot.MotFileLoader()
-        sprFile.files[0].Json.animations = motFile.aa
+        let sprFile = await spr.SprFileLoader()
+        let jsonData = spr.getAnimations(sprFile.files, motFile, 0);
+        console.log(jsonData);
         let imgURL = await spr.loadToDataURL(sprFile.files, 0);
-        
         const texture = await PIXI.Assets.load(imgURL);
+        
         let spritesheet = new PIXI.Spritesheet(
             texture,
-            sprFile.files[0].Json
+            jsonData
         );
         await spritesheet.parse();
         this._sprite = spritesheet
+
+        
+        let eyes = new SprReader('assests/data/Avatar/eye', 1);
+        let eyeMot = new MotReader('assests/data/Avatar/eye', 1)
+        let eye = await eyes.SprFileLoader();
+        let eyeMotFile = await eyeMot.MotFileLoader();
+        let eyeJsonData = eyes.getAnimations(eye.files, eyeMotFile, 0);
+        console.log(eyeJsonData);
+        let eyeImgURL = await eyes.loadToDataURL(eye.files, 0);
+        const eyeTexture = await PIXI.Assets.load(eyeImgURL);
+
+        let eyeSpritesheet = new PIXI.Spritesheet(
+            eyeTexture,
+            eyeJsonData
+        );
+        await eyeSpritesheet.parse();
+        this._eye = eyeSpritesheet;
+
     }
 
     play = (stage, x, y, action) => {
 
         const container = new PIXI.Container();
 
-        const anim = new PIXI.AnimatedSprite(this._sprite.animations[action]);
+        const body = new PIXI.AnimatedSprite(this._sprite.animations[action]);
+        const eye = new PIXI.AnimatedSprite(this._eye.animations[action]);
         
-        anim.anchor.set(0.5);
+        //anim.anchor.set(0.5);
+        //eyeAnim.anchor.set(0.5);
 
 //         const sprites = {
 //     'alien death': { start: 1, end: 2 },
@@ -90,11 +112,21 @@ class Player {
 
         
         // set the animation speed
-        anim.animationSpeed = 0.10;
+        body.animationSpeed = 1/10;
+        eye.animationSpeed = 1/10;
+        
+        body.updateAnchor = true;
+        eye.updateAnchor = true;
+        body.x = 0;
+        body.y = 0;
+        eye.x = -10;
+        eye.y = -50;
         // play the animation on a loop
-        anim.play();
+        body.play();
+        eye.play();
         // add it to the stage to render
-        container.addChild(anim);
+        container.addChild(body);
+        container.addChild(eye);
 
         container.x = x;
         container.y = y;

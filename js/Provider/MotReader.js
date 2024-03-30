@@ -8,7 +8,7 @@ class MotReader {
         // read mot file
         let action = new Promise((resolve, reject) => {
             try {
-                fetch(this._path + '.mot').then(async (res) => {
+                fetch(this._path + ( this._type === 0 ? '.mot' : '.cmo')).then(async (res) => {
                     let motBuff = new ArrayBufferRead(Array.from(new Uint8Array(await res.arrayBuffer())))
                     let size = 1
                     if (this._type === 1) {
@@ -60,8 +60,8 @@ class MotReader {
                         }
                         actions[i] = objDat
                     }
-                    let aa = Object.fromEntries(ani)
-                    resolve({ actions, aa })
+                    let animations = Object.fromEntries(ani)
+                    resolve({ actions, animations })
                 })
             } catch (e) {
                 console.error('error:' + e)

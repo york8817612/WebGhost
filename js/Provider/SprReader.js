@@ -8,7 +8,7 @@ class SprReader {
         // read spr file
         let files = new Promise((resolve, reject) => {
             try {
-                fetch(this._path + '.spr').then(async (res) => {
+                fetch(this._path + ( this._type === 0 ? '.spr' : '.csp')).then(async (res) => {
                     let files = []
                     let sprBuff = new ArrayBufferRead(Array.from(new Uint8Array(await res.arrayBuffer())))
                     let sprSize = 1
@@ -166,9 +166,31 @@ class SprReader {
             sourceSize: {
                 w: w,
                 h: h
+            },
+            anchor: {
+                x:0.222222,
+                y:1
             }
         }
         return obj
+    }
+
+    getAnimations(files, mot, fidx) {
+        let jsonData = files[fidx].Json;
+        jsonData.animations = mot.animations;
+        for (let ani of Object.values(mot.actions[0].Action)) {
+            for (let idx of ani.offset) {
+                // (1 / w) * (w / 2 - x)
+                // (1 / h) * (h / 2 - y)
+                let w = jsonData.frames[idx.sprIndex].sourceSize.w;
+                let h = jsonData.frames[idx.sprIndex].sourceSize.h;
+                let offsetX = parseFloat(((1 / w) * ((w / 2) - idx.x)).toFixed(2));
+                let offsetY = parseFloat(((1 / h) * ((h / 2) - idx.y)).toFixed(2));
+                jsonData.frames[idx.sprIndex].anchor.x = offsetX > 1 ? 1 : (offsetX < 0 ? 0 : offsetX);
+                jsonData.frames[idx.sprIndex].anchor.y = offsetY > 1 ? 1 : (offsetY < 0 ? 0 : offsetY);
+            }
+        }
+        return jsonData;
     }
 
     loadObjURL(files, fidx) {
@@ -185,15 +207,6 @@ class SprReader {
                 }
                 reader.src = url
             })
-        })
-    }
-
-    async ImageLoaded(uri, width, height) {
-        return new Promise((resolve, reject) => {
-            let newimg = new Image(width, height)
-            newimg.onload = () => resolve(newimg)
-            newimg.onerror = reject
-            newimg.src = uri
         })
     }
 

@@ -37,7 +37,7 @@ class BgReader {
                     ctx.putImageData(imageData, 0, 0)
                     console.log('break')
 
-                    resolve(ColorType, TexBlendType, FileType, SearchColor, Width, Height, Width2, Height2, NumPixels, newImg)
+                    resolve({ColorType, TexBlendType, FileType, SearchColor, Width, Height, Width2, Height2, NumPixels, newImg})
 
                 })
             } catch (e) {

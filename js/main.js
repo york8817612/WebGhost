@@ -39,27 +39,94 @@ Main = async () => {
     await play.load()
     play.play(app.stage, 200, 200, play.ACTION_TYPE.STAND_1)
 
-    const body = document.querySelector('body');
-
-    body.addEventListener('keydown',(e) => {
+    app.ticker.add(delta => {
+        const speed = 10;
         let x = play.position.x;
         let y = play.position.y;
-        switch(e.keyCode) {
-            case 38:
-            case 87:
-                play.position(x, y - 5);
+        //play.position((play.x + speed * delta) % (back.width + 200), y);
+        //play._container.x = (x + speed * delta) % (back.width + 200);
+    });
+
+    // const t1 = await PIXI.Assets.load('/images/test.png');
+    // const td = {"frames": {
+
+    //     "0":
+    //     {
+    //         "frame": {"x":0,"y":0,"w":36,"h":77},
+    //         "rotated": false,
+    //         "trimmed": false,
+    //         "spriteSourceSize": {"x":0,"y":0,"w":36,"h":77},
+    //         "sourceSize": {"w":36,"h":77},
+    //         "anchor": {"x":0.527778,"y":1.01}
+    //     },
+    //     "1":
+    //     {
+    //         "frame": {"x":36,"y":0,"w":36,"h":78},
+    //         "rotated": false,
+    //         "trimmed": false,
+    //         "spriteSourceSize": {"x":0,"y":0,"w":36,"h":78},
+    //         "sourceSize": {"w":36,"h":78},
+    //         "anchor": {"x":0.555556,"y":1}
+    //     },
+    //     "2":
+    //     {
+    //         "frame": {"x":72,"y":0,"w":36,"h":79},
+    //         "rotated": false,
+    //         "trimmed": false,
+    //         "spriteSourceSize": {"x":0,"y":0,"w":36,"h":79},
+    //         "sourceSize": {"w":36,"h":79},
+    //         "anchor": {"x":0.555556,"y":1.01}
+    //     }},
+    //     "meta": {
+    //         "app": "https://www.codeandweb.com/texturepacker",
+    //         "version": "1.1",
+    //         "image": "test.png",
+    //         "format": "RGBA8888",
+    //         "size": {"w":108,"h":79},
+    //         "scale": "1",
+    //         "smartupdate": "$TexturePacker:SmartUpdate:80d385f499c33f6ce2c1e7e5c534b0c8:968203b3e5a0618a3adb5f691025b1d0:02ab132358d6d8b512e80119463a8329$"
+    //     },
+    //     "animations":
+    //     {
+    //         "STAND_1": [0, 1, 2, 1]
+    //     }
+    // }
+        
+        
+    // let st = new PIXI.Spritesheet(
+    //     t1,
+    //     td
+    // );
+    // await st.parse();
+    // const anim = new PIXI.AnimatedSprite(st.animations[play.ACTION_TYPE.STAND_1]);
+    // anim.x = 300;
+    // anim.y = 300;
+    // anim.animationSpeed = 0.10;
+    // anim.updateAnchor = true;
+    // anim.play();
+    // app.stage.addChild(anim);
+
+    document.addEventListener('keydown',(e) => {
+        switch(e.key.toLowerCase()) {
+            case "s":
+            case "arrowdown":
+                play._container.y += 5;
+                //play.position(x, y - 5);
                 break;
-            case 40:
-            case 83:
-                play.position(x, y + 5);
+            case "w":
+            case "arrowup":
+                play._container.y -= 5;
+                //play.position(x, y + 5);
                 break;
-            case 37:
-            case 65:
-                play.position(x - 5, y);
+            case "a":
+            case "arrowleft":
+                play._container.x -= 5;
+                //play.position(x - 5, y);
                 break;
-            case 39:
-            case 68:
-                play.position(x + 5, y);
+            case "d":
+            case "arrowright":
+                play._container.x += 5;
+                //play.position(x + 5, y);
                 break;
             default:
                 break;
