@@ -21,7 +21,7 @@ class ArrayBufferRead {
         let byte1 = this.buffer[this.offset]
         let byte2 = this.buffer[this.offset + 1]
         this.offset += 2
-        return TwoIsComplement([byte2, byte1])
+        return twoIsComplement([byte2, byte1])
     }
 
     readInt() {
@@ -87,6 +87,6 @@ class ArrayBufferRead {
     }
 }
 
-function TwoIsComplement(v) {
+function twoIsComplement(v) {
     return (((v[0] << 8) | v[1]) << 16) >> 16
 }
